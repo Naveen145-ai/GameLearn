@@ -45,7 +45,7 @@ export default function Ninth() {
       style={{ marginBottom: 16 }}
     >
       <TouchableOpacity
-        onPress={() => router.push(`/games/${subject.name.toLowerCase()}/${subject.gameId}`)}
+        onPress={() => router.push(`/games/${subject.name.toLowerCase()}/${subject.name.toLowerCase()}_9th`)}
         activeOpacity={0.8}
       >
         <LinearGradient

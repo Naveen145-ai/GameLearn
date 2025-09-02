@@ -25,18 +25,18 @@ export default function Home() {
     }
   ];
 
-  const SubjectCard = ({ subject, index }: { subject: any; index: number }) => (
+  const GradeCard = ({ gradeData, index }: { gradeData: any; index: number }) => (
     <Animatable.View
       animation="fadeInUp"
       delay={index * 200}
       style={{ marginBottom: 16 }}
     >
       <TouchableOpacity
-        onPress={() => router.push(`/games/${subject.name.toLowerCase()}`)}
+        onPress={() => router.push(`/(tabs)/${gradeData.grade === 9 ? 'ninth' : 'tenth'}`)}
         activeOpacity={0.8}
       >
         <LinearGradient
-          colors={subject.color}
+          colors={gradeData.color}
           style={{
             borderRadius: 20,
             padding: 20,
@@ -55,14 +55,14 @@ export default function Home() {
                 padding: 12,
                 marginRight: 16
               }}>
-                <Ionicons name={subject.icon as any} size={32} color="white" />
+                <Ionicons name={gradeData.icon as any} size={32} color="white" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginBottom: 4 }}>
-                  {subject.name}
+                  {gradeData.title}
                 </Text>
                 <Text style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>
-                  {subject.games} interactive games
+                  {gradeData.subjects.join(', ')}
                 </Text>
               </View>
             </View>
@@ -126,13 +126,13 @@ export default function Home() {
         {/* Quick Stats */}
         <QuickStatsCard />
 
-        {/* Subject Cards */}
+        {/* Grade Cards */}
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', marginBottom: 16 }}>
-          Choose Your Subject
+          Choose Your Grade
         </Text>
         
-        {subjects.map((subject, index) => (
-          <SubjectCard key={subject.name} subject={subject} index={index} />
+        {grades.map((gradeData, index) => (
+          <GradeCard key={gradeData.grade} gradeData={gradeData} index={index} />
         ))}
 
         {/* Quick Access Buttons */}
@@ -156,7 +156,7 @@ export default function Home() {
             </TouchableOpacity>
             
             <TouchableOpacity
-              onPress={() => router.push('/games/fruitCatch')}
+              onPress={() => router.push('/(tabs)/ninth')}
               style={{
                 backgroundColor: 'rgba(255,255,255,0.2)',
                 borderRadius: 15,
@@ -168,7 +168,7 @@ export default function Home() {
             >
               <Ionicons name="game-controller" size={24} color="white" />
               <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginTop: 4 }}>
-                Quick Game
+                Quick Play
               </Text>
             </TouchableOpacity>
           </View>

@@ -33,8 +33,8 @@ export default function Ninth() {
       name: 'Math', 
       icon: 'calculator', 
       color: ['#F59E0B', '#D97706'],
-      topics: ['Number Systems', 'Polynomials', 'Linear Equations', 'Geometry'],
-      gameId: 'math_9th'
+      topics: ['Identities', 'Polynomials', 'Linear Equations', 'Geometry'],
+      gameId: 'math_9th_formula_builder'
     }
   ];
 
@@ -45,7 +45,13 @@ export default function Ninth() {
       style={{ marginBottom: 16 }}
     >
       <TouchableOpacity
-        onPress={() => router.push(`/games/${subject.name.toLowerCase()}/${subject.name.toLowerCase()}_9th`)}
+        onPress={() => {
+          if (subject.name === 'Math') {
+            router.push('/games/math/modes_9th');
+          } else {
+            router.push(`/games/${subject.name.toLowerCase()}/${subject.name.toLowerCase()}_9th`);
+          }
+        }}
         activeOpacity={0.8}
       >
         <LinearGradient

@@ -1,13 +1,35 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
 import { router } from 'expo-router';
+import { useAuth } from '../../src/contexts/AuthContext';
+import { commonStyles, palette, radius, shadow, spacing } from '@/constants/theme';
 
 const { width } = Dimensions.get('window');
 
 export default function Home() {
+  const { user, logout } = useAuth();
+  
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Logout', 
+          style: 'destructive',
+          onPress: async () => {
+            await logout();
+            router.replace('/auth');
+          }
+        }
+      ]
+    );
+  };
+
   const grades = [
     { 
       grade: 9, 
@@ -29,7 +51,7 @@ export default function Home() {
     <Animatable.View
       animation="fadeInUp"
       delay={index * 200}
-      style={{ marginBottom: 16 }}
+      style={{ marginBottom: spacing.md }}
     >
       <TouchableOpacity
         onPress={() => router.push(`/(tabs)/${gradeData.grade === 9 ? 'ninth' : 'tenth'}`)}
@@ -38,30 +60,21 @@ export default function Home() {
         <LinearGradient
           colors={gradeData.color}
           style={{
-            borderRadius: 20,
-            padding: 20,
-            elevation: 8,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
+            borderRadius: radius.xl,
+            padding: spacing.lg,
+            ...shadow.card,
           }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-              <View style={{
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                borderRadius: 15,
-                padding: 12,
-                marginRight: 16
-              }}>
+          <View style={[commonStyles.row, commonStyles.spaceBetween]}>
+            <View style={[commonStyles.row, { flex: 1 }]}>
+              <View style={[commonStyles.glass, { marginRight: spacing.md }]}>
                 <Ionicons name={gradeData.icon as any} size={32} color="white" />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold', color: 'white', marginBottom: 4 }}>
+                <Text style={[commonStyles.textTitle, { marginBottom: 4 }]}>
                   {gradeData.title}
                 </Text>
-                <Text style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>
+                <Text style={commonStyles.textMuted}>
                   {gradeData.subjects.join(', ')}
                 </Text>
               </View>
@@ -75,32 +88,22 @@ export default function Home() {
 
   const QuickStatsCard = () => (
     <Animatable.View animation="fadeIn" delay={800}>
-      <View style={{
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 20,
-        marginBottom: 20,
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-      }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#1F2937', marginBottom: 16 }}>
+      <View style={[commonStyles.card, { marginBottom: spacing.lg }]}>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', color: palette.textDark, marginBottom: spacing.md }}>
           Your Progress
         </Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#3B82F6' }}>12</Text>
-            <Text style={{ fontSize: 12, color: '#6B7280' }}>Games Played</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: palette.primary }}>12</Text>
+            <Text style={{ fontSize: 12, color: palette.muted }}>Games Played</Text>
           </View>
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#10B981' }}>850</Text>
-            <Text style={{ fontSize: 12, color: '#6B7280' }}>Total Score</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: palette.success }}>850</Text>
+            <Text style={{ fontSize: 12, color: palette.muted }}>Total Score</Text>
           </View>
           <View style={{ alignItems: 'center' }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#F59E0B' }}>5</Text>
-            <Text style={{ fontSize: 12, color: '#6B7280' }}>Streak</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: palette.warning }}>5</Text>
+            <Text style={{ fontSize: 12, color: palette.muted }}>Streak</Text>
           </View>
         </View>
       </View>
@@ -109,25 +112,45 @@ export default function Home() {
 
   return (
     <LinearGradient
-      colors={['#667eea', '#764ba2']}
+      colors={[palette.backgroundTop, palette.backgroundBottom]}
       style={{ flex: 1 }}
     >
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, paddingTop: 60 }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: spacing.lg, paddingTop: spacing.xxl }}>
         {/* Header */}
         <Animatable.View animation="fadeInDown" style={{ alignItems: 'center', marginBottom: 30 }}>
           <Text style={{ fontSize: 32, fontWeight: 'bold', color: 'white', textAlign: 'center' }}>
             🎮 Learning Games
           </Text>
-          <Text style={{ fontSize: 16, color: 'rgba(255,255,255,0.8)', marginTop: 8, textAlign: 'center' }}>
+          <Text style={[commonStyles.textMuted, { fontSize: 16, marginTop: 8, textAlign: 'center' }]}>
             Master 9th & 10th grade concepts through fun games
           </Text>
+        </Animatable.View>
+
+        {/* User Info & Logout */}
+        <Animatable.View animation="fadeInDown" delay={200}>
+          <View style={[commonStyles.glass, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg }]}>
+            <View>
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                Welcome, {user?.name || 'Student'}!
+              </Text>
+              <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14 }}>
+                {user?.type === 'student' ? `Grade ${user?.grade}` : `Subject: ${user?.subject}`}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={[commonStyles.glass, { padding: spacing.sm }]}
+            >
+              <Ionicons name="log-out-outline" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
         </Animatable.View>
 
         {/* Quick Stats */}
         <QuickStatsCard />
 
         {/* Grade Cards */}
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', marginBottom: 16 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white', marginBottom: spacing.md }}>
           Choose Your Grade
         </Text>
         
@@ -137,17 +160,10 @@ export default function Home() {
 
         {/* Quick Access Buttons */}
         <Animatable.View animation="fadeInUp" delay={1000}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: spacing.lg }}>
             <TouchableOpacity
               onPress={() => router.push('/(tabs)/leaderboard')}
-              style={{
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                borderRadius: 15,
-                padding: 16,
-                flex: 1,
-                marginRight: 8,
-                alignItems: 'center'
-              }}
+              style={[commonStyles.buttonPill, commonStyles.glass, { marginRight: spacing.sm }]}
             >
               <Ionicons name="trophy" size={24} color="white" />
               <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginTop: 4 }}>
@@ -157,14 +173,7 @@ export default function Home() {
             
             <TouchableOpacity
               onPress={() => router.push('/(tabs)/ninth')}
-              style={{
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                borderRadius: 15,
-                padding: 16,
-                flex: 1,
-                marginLeft: 8,
-                alignItems: 'center'
-              }}
+              style={[commonStyles.buttonPill, commonStyles.glass, { marginLeft: spacing.sm }]}
             >
               <Ionicons name="game-controller" size={24} color="white" />
               <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginTop: 4 }}>
@@ -176,17 +185,49 @@ export default function Home() {
 
         {/* Learning Tip */}
         <Animatable.View animation="fadeIn" delay={1200}>
-          <View style={{
-            backgroundColor: 'rgba(255,255,255,0.1)',
-            borderRadius: 15,
-            padding: 16,
-            marginTop: 20,
-            marginBottom: 20
-          }}>
+          <View style={[commonStyles.glassSoft, { marginTop: spacing.lg, marginBottom: spacing.lg }]}>
             <Text style={{ color: 'white', fontSize: 14, textAlign: 'center', lineHeight: 20 }}>
               💡 <Text style={{ fontWeight: 'bold' }}>Daily Tip:</Text> Play games regularly to improve your understanding and climb the leaderboard!
             </Text>
           </View>
+        </Animatable.View>
+
+        {/* Student Progress & Export */}
+        <Animatable.View animation="fadeInUp" delay={1400}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: spacing.lg }}>
+            <TouchableOpacity
+              onPress={() => router.push('/students/myProgress')}
+              style={[commonStyles.buttonPill, commonStyles.glass, { marginRight: spacing.sm }]}
+            >
+              <Ionicons name="bar-chart" size={24} color="white" />
+              <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginTop: 4 }}>
+                My Progress
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => router.push('/students/exportProgress')}
+              style={[commonStyles.buttonPill, commonStyles.glass, { marginLeft: spacing.sm }]}
+            >
+              <Ionicons name="share-social" size={24} color="white" />
+              <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginTop: 4 }}>
+                Export Progress
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Animatable.View>
+
+        {/* Teacher Access */}
+        <Animatable.View animation="fadeInUp" delay={1600}>
+          <TouchableOpacity
+            onPress={() => router.push('/teachers/mathProgress')}
+            style={[commonStyles.buttonPill, commonStyles.glass, { marginTop: spacing.lg, alignSelf: 'center' }]}
+          >
+            <Ionicons name="school" size={24} color="white" />
+            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginTop: 4 }}>
+              Teacher Progress View
+            </Text>
+          </TouchableOpacity>
         </Animatable.View>
       </ScrollView>
     </LinearGradient>

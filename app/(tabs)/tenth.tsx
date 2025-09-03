@@ -33,8 +33,8 @@ export default function Tenth() {
       name: 'Math', 
       icon: 'calculator', 
       color: ['#F59E0B', '#D97706'],
-      topics: ['Real Numbers', 'Polynomials', 'Quadratic Equations', 'Trigonometry'],
-      gameId: 'math_10th'
+      topics: ['Quadratics', 'Trigonometry', 'AP/GP', 'Mensuration'],
+      gameId: 'math_10th_formula_builder'
     }
   ];
 
@@ -45,7 +45,13 @@ export default function Tenth() {
       style={{ marginBottom: 16 }}
     >
       <TouchableOpacity
-        onPress={() => router.push(`/games/${subject.name.toLowerCase()}/${subject.name.toLowerCase()}_10th`)}
+        onPress={() => {
+          if (subject.name === 'Math') {
+            router.push('/games/math/modes_10th');
+          } else {
+            router.push(`/games/${subject.name.toLowerCase()}/${subject.name.toLowerCase()}_10th`);
+          }
+        }}
         activeOpacity={0.8}
       >
         <LinearGradient

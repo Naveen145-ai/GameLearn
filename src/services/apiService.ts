@@ -1,6 +1,22 @@
 import axios from 'axios';
+import { Platform } from 'react-native';
 
-const API_BASE_URL = 'http://localhost:3004/api';
+function resolveApiBaseUrl() {
+	// Android emulator cannot access localhost; it needs 10.0.2.2. iOS simulator can use localhost.
+	// For physical devices on the same Wi-Fi, replace with your machine IP.
+	const port = 3004;
+	// Use the provided LAN IP when available (user supplied)
+	const LAN_IP = '10.68.167.242';
+	if (LAN_IP) {
+		return `http://${LAN_IP}:${port}/api`;
+	}
+	if (Platform.OS === 'android') {
+		return `http://10.0.2.2:${port}/api`;
+	}
+	return `http://localhost:${port}/api`;
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 export interface GameScore {
   id?: string;
